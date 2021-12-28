@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Query, Headers } from '@nestjs/common'
-import { AppService } from '../services/app.service'
+import { AppService } from './app.service'
 import dayjs from 'dayjs'
 
 @Controller()
