@@ -7,14 +7,15 @@ export class AppController {
   constructor (private readonly appService: AppService) {}
 
   @Get()
-  getHello (): string {
-    return this.appService.getHello()
+  getHello (): any {
+    return { ok : true, data: {} };
   }
 
   @Post()
   test (@Body() body: any, @Query() query: any, @Headers() headers: any): any {
     console.log(JSON.stringify({ time: dayjs().format('YYYY-MM-DD HH:mm:ss'), body, query, headers }))
     return {
+      ok: true,
       body,
       query,
       headers
