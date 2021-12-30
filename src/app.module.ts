@@ -1,23 +1,21 @@
 import { Module } from '@nestjs/common'
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config'
+import { HttpModule } from '@nestjs/axios'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { ConfigModule } from '@nestjs/config'
-import { SequelizeModule } from '@nestjs/sequelize'
+import { services } from './service';
+import { controllers } from './controller'
+import { entities } from './entities'
 
 @Module({
   imports: [
+    HttpModule,
     ConfigModule.forRoot(),
-    SequelizeModule.forRoot({
-      dialect: 'mysql',
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT, 10),
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_PORT,
-      models: []
-    })
+    TypeOrmModule.forRoot({ autoLoadEntities: true }),
+    TypeOrmModule.forFeature(entities),
   ],
-  controllers: [AppController],
-  providers: [AppService]
+  controllers: [AppController, ...controllers],
+  providers: [AppService, ...services]
 })
 export class AppModule {}
