@@ -22,11 +22,14 @@ export class Subscription {
   @Column({ name: 'start_date' })
   startDate: Date;
 
-  @Column({ name: 'expires_date' })
+  @Column({ name: 'expires_date', nullable: true })
   expiresDate: Date;
   
   @Column({ name: 'is_trial_period' })
   isTrial: boolean;
+  
+  @Column({ name: 'auto_renew_status' })
+  autoRenewStatus: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

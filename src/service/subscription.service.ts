@@ -1,13 +1,11 @@
 import moment from 'moment'
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common'
-import { HttpService } from '@nestjs/axios'
-import { ConfigService } from '@nestjs/config'
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Subscription } from '../entities/subscription.entity'
 import { Product } from '../entities/product.entity'
 import { Transaction } from '../entities/transaction.entity'
-import { InApp } from '../interface/apple.verify'
+import { SubscriptionCreationPayload } from '../interface/subscription.create'
 
 @Injectable()
 export class SubscriptionService {
@@ -17,51 +15,56 @@ export class SubscriptionService {
     @InjectRepository(Product) private productRepo: Repository<Product>,
   ) {}
   
-  async create(
-    userId: string,
-    inApp: InApp
+  async createOrUpdate(
+    data: SubscriptionCreationPayload,
+    userId?: string
   ): Promise<Subscription> {
-    const product = await this.productRepo.findOne(inApp.product_id);
+    console.log(data)
+    const product = await this.productRepo.findOne(data.productId);
     if (!product) {
       throw new NotFoundException('product not exist');
     }
     
-    const transaction = await this.transactionRepo.findOne(inApp.transaction_id);
+    const transaction = await this.transactionRepo.findOne(data.transactionId);
     if (transaction) {
       throw new ConflictException('invalid transaction');
     }
+    
+    const originalTransaction = await this.transactionRepo.findOne({
+      originalTransactionId: data.originalTransactionId
+    });
 
-    let subscription = await this.subscriptionRepo.findOne({
-      userId, product
-    })
-
-    if (!subscription) {
-      subscription = await this.subscriptionRepo.save({
-        userId,
-        startDate: moment(inApp.purchase_date, 'YYYY-MM-DD HH:mm:ss').toDate(),
-        expiresDate: moment(inApp.expires_date, 'YYYY-MM-DD HH:mm:ss').toDate(),
-        isTrial: inApp.is_trial_period === 'true',
+    let subscription: Subscription
+    if (originalTransaction) {
+      subscription = await this.subscriptionRepo.findOne({
+        userId: originalTransaction.userId,
         product
       })
-    } else {
-      console.log(subscription.startDate)
-      subscription.expiresDate = moment(inApp.expires_date, 'YYYY-MM-DD HH:mm:ss').toDate();
-      subscription.isTrial = inApp.is_trial_period === 'true'
+
+      subscription.expiresDate = data.expiresDate && moment(data.expiresDate).toDate();
+      subscription.isTrial = data.isTrialPeriod === 'true'
       await this.subscriptionRepo.save(subscription)
+    } else {
+      console.log('------data------', moment(data.purchaseDate).toDate())
+      subscription = await this.subscriptionRepo.save({
+        userId,
+        startDate: moment(data.purchaseDate).toDate(),
+        expiresDate: data.expiresDate && moment(data.expiresDate).toDate(),
+        isTrial: data.isTrialPeriod === 'true',
+        product
+      })
     }
 
-    console.log(inApp)
-
     await this.transactionRepo.save({
-      userId,
+      userId: subscription.userId,
       subscription,
       product,
-      id: inApp.transaction_id,
-      originalTransactionId: inApp.original_transaction_id,
-      purchaseDate: moment(inApp.purchase_date, 'YYYY-MM-DD HH:mm:ss').toDate(),
-      expiresDate: moment(inApp.expires_date, 'YYYY-MM-DD HH:mm:ss').toDate(),
-      isTrial: inApp.is_trial_period === 'true',
-      ownershipType: inApp.in_app_ownership_type
+      id: data.transactionId,
+      originalTransactionId: data.originalTransactionId,
+      purchaseDate: moment(data.purchaseDate).toDate(),
+      expiresDate: data.expiresDate && moment(data.expiresDate).toDate(),
+      isTrial: data.isTrialPeriod === 'true',
+      ownershipType: data.inAppOwnershipType
     })
 
     return subscription;

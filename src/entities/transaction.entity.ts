@@ -10,7 +10,7 @@ import {
 import { Product } from './product.entity'
 import { Subscription } from './subscription.entity'
 
-@Entity({ name: 'Transactions' })
+@Entity({ name: 'transactions' })
 export class Transaction {
   @PrimaryColumn({ length: 40 })
   id: string;

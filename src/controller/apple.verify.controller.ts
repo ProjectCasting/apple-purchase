@@ -8,22 +8,26 @@ export class AppleVerifyController {
   constructor (
     private readonly appleVerifyService: AppleVerifyService,
     private readonly subscriptionService: SubscriptionService,
-    
   ) {}
 
   @Post()
   @HttpCode(200)
   async verify (@Body() body: any, @Query() query: any, @Headers() headers: any) {
-    console.log(body.signedPayload)
     const verifyData = await this.appleVerifyService.validatePurchase(body.receipt)
+    const { status, message } = verifyData
+
+    console.log('verfiy data', verifyData)
     
-    const { status, message, inApp } = verifyData
-    
-    if (!inApp) {
+    if (!verifyData.receipt) {
       return { status, message }
     }
 
-    const data = await this.subscriptionService.create(body.userId, verifyData.inApp)
+    const inAppIndex = verifyData.receipt.in_app.length - 1
+    const payload = this.appleVerifyService.formatInAppPayload(verifyData.receipt.in_app[inAppIndex]);
+    
+    console.log('verfiy data in_app', verifyData.receipt.in_app[inAppIndex])
+    
+    const data = await this.subscriptionService.createOrUpdate(payload, body.userId)
     return { status, message, data }
   }
 }

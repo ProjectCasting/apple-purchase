@@ -3,18 +3,15 @@ import { HttpService } from '@nestjs/axios'
 import { ConfigService } from '@nestjs/config'
 import { AppleEnv } from '../constant/apple.env'
 import { AppleCode } from '../constant/apple.code'
-import { VerifyPostData, VerifyResponse } from '../interface/apple.verify'
+import { InApp, VerifyPostData, VerifyResponse } from '../interface/apple.verify'
 import { AppleMessage } from '../constant/apple.message'
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Subscription } from '../entities/subscription.entity'
+import { SubscriptionCreationPayload } from '../interface/subscription.create'
 
 @Injectable()
 export class AppleVerifyService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
-    @InjectRepository(Subscription) private subscriptionRepo: Repository<Subscription>,
   ) {}
 
   private getEnvironment(): AppleEnv {
@@ -45,9 +42,21 @@ export class AppleVerifyService {
     }
   }
 
-  private checkEmptyPurchase(data: VerifyResponse): Boolean {
+  private checkEmptyPurchase(data: VerifyResponse): boolean {
     const inApp = data.receipt['in_app']
     return inApp && !inApp.length
+  }
+  
+  formatInAppPayload(inApp: InApp): SubscriptionCreationPayload {
+    return {
+      productId: inApp.product_id,
+      transactionId: inApp.transaction_id,
+      originalTransactionId: inApp.original_transaction_id,
+      purchaseDate: parseInt(inApp.purchase_date_ms),
+      expiresDate: inApp.expires_date_ms && parseInt(inApp.expires_date_ms),
+      inAppOwnershipType: inApp.in_app_ownership_type,
+      isTrialPeriod: inApp.is_trial_period
+    }
   }
 
   async validatePurchase(receipt: string): Promise<any> {
@@ -67,12 +76,10 @@ export class AppleVerifyService {
     if (isEmptyPurchase) {
       return this.getResult(AppleCode.VALID_BUT_EMPTY)
     }
-    
-    const inApp = data.receipt.in_app[0]
 
     return {
       ...result,
-      inApp
+      ...data
     }
   }
 }
