@@ -30,3 +30,9 @@ export enum Subtype {
   PENDING = 'PENDING',
   ACCEPTED = 'ACCEPTED'
 }
+
+export enum Action {
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  IGNORE = 'IGNORE'
+}

@@ -1,8 +1,8 @@
 import { Controller, Get, Body, Post } from '@nestjs/common'
 import { AppService } from './app.service'
+import { Action } from './constant/apple.webhook'
 import { AppleWebhookService } from './service/apple.webhook.service'
 import { SubscriptionService } from './service/subscription.service'
-import { data } from './test/data'
 
 @Controller()
 export class AppController {
@@ -16,13 +16,19 @@ export class AppController {
   async getHello(@Body() body: any): Promise<any> {
     return { ok: true }
   }
-  
+
   @Post()
   async webhook(@Body() body: any): Promise<any> {
-    const result = await this.appleWebhookService.decodePayload(body.signedPayload)
+    const result = await this.appleWebhookService.handle(body.signedPayload)
     console.log('decode payload from apple', result)
-    const payload = this.appleWebhookService.formatCreationPayload(result.signedTransactionInfo)
-    await this.subscriptionService.createOrUpdate(payload)
+    if (result) {
+      const { action, payload } = result
+      if (action === Action.CREATE) {
+        await this.subscriptionService.create(payload)
+      } else if (action === Action.UPDATE) {
+        await this.subscriptionService.update(payload)
+      }
+    }
     return { ok: true }
   }
 }

@@ -17,16 +17,16 @@ export class AppleVerifyController {
     const { status, message } = verifyData
 
     console.log('verfiy data', verifyData)
-    
+
     if (!verifyData.receipt) {
       return { status, message }
     }
 
     const inAppIndex = verifyData.receipt.in_app.length - 1
     const payload = this.appleVerifyService.formatInAppPayload(verifyData.receipt.in_app[inAppIndex]);
-    
+
     console.log('verfiy data in_app', verifyData.receipt.in_app[inAppIndex])
-    
+
     const data = await this.subscriptionService.createOrUpdate(payload, body.userId)
     return { status, message, data }
   }

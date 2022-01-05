@@ -1,3 +1,5 @@
+import { Subtype } from "../constant/apple.webhook";
+
 export interface TransactionDecodedPayload {
   transactionId: string;
   originalTransactionId: string;
@@ -32,4 +34,20 @@ export interface RenewalInfoDecodedPayload {
   offerType?: string;
   priceIncreaseStatus?: string;
   expirationIntent?: string;
+}
+
+export interface DecodePayloadData {
+  bundleId: string;
+  bundleVersion: string;
+  environment: string;
+  signedTransactionInfo: string;
+  signedRenewalInfo: string;
+}
+
+export interface DecodePayload {
+  notificationType: string;
+  subtype: Subtype;
+  notificationUUID: string;
+  data: DecodePayloadData;
+  version: string;
 }

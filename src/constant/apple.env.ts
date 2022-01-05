@@ -1,4 +1,4 @@
 export enum AppleEnv {
-  Live = 'Live',
-  Sandbox = 'sandbox'
+  LIVE = 'Live',
+  SANDBOX = 'sandbox'
 }

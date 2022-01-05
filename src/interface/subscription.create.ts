@@ -1,4 +1,4 @@
-export interface SubscriptionCreationPayload{
+export interface SubscriptionPayload{
   productId: string
   transactionId: string
   originalTransactionId: string
