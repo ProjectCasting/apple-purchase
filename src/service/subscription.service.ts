@@ -6,7 +6,6 @@ import { Subscription } from '../entities/subscription.entity'
 import { Product } from '../entities/product.entity'
 import { Transaction } from '../entities/transaction.entity'
 import { SubscriptionPayload } from '../interface/subscription.create'
-import { ProductType } from '../constant/product.type'
 
 @Injectable()
 export class SubscriptionService {

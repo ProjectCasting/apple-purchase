@@ -2,17 +2,20 @@ import { Body, Controller, Get, Post, Query, Headers, HttpCode } from '@nestjs/c
 
 import { AppleVerifyService } from '../service/apple.verify.service'
 import { SubscriptionService } from '../service/subscription.service'
+import { ReceiptService } from '../service/receipt.service'
 
 @Controller('/apple/verify')
 export class AppleVerifyController {
   constructor (
     private readonly appleVerifyService: AppleVerifyService,
     private readonly subscriptionService: SubscriptionService,
+    private readonly receiptService: ReceiptService,
   ) {}
 
   @Post()
   @HttpCode(200)
   async verify (@Body() body: any, @Query() query: any, @Headers() headers: any) {
+    await this.receiptService.create(body.userId, body.receipt)
     const verifyData = await this.appleVerifyService.validatePurchase(body.receipt)
     const { status, message } = verifyData
 

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm';
 import { HttpService } from '@nestjs/axios'
 import { ConfigService } from '@nestjs/config'
 import { AppleEnv } from '../constant/apple.env'
@@ -6,12 +7,15 @@ import { AppleCode } from '../constant/apple.code'
 import { InApp, VerifyPostData, VerifyResponse } from '../interface/apple.verify'
 import { AppleMessage } from '../constant/apple.message'
 import { SubscriptionPayload } from '../interface/subscription.create'
+import { Receipt } from '../entities/receipt.entity'
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AppleVerifyService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
+    @InjectRepository(Receipt) private receiptRepo: Repository<Receipt>,
   ) {}
 
   private getEnvironment(): AppleEnv {

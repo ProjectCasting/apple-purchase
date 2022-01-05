@@ -3,6 +3,7 @@ import { AppService } from './app.service'
 import { Action } from './constant/apple.webhook'
 import { AppleWebhookService } from './service/apple.webhook.service'
 import { SubscriptionService } from './service/subscription.service'
+import { SignedPayloadService } from './service/signed.payload.service'
 
 @Controller()
 export class AppController {
@@ -10,6 +11,7 @@ export class AppController {
     private readonly appService: AppService,
     private readonly appleWebhookService: AppleWebhookService,
     private readonly subscriptionService: SubscriptionService,
+    private readonly signedPayloadService: SignedPayloadService,
   ) {}
 
   @Get()
@@ -19,6 +21,7 @@ export class AppController {
 
   @Post()
   async webhook(@Body() body: any): Promise<any> {
+    await this.signedPayloadService.create(body.signedPayload)
     const result = await this.appleWebhookService.handle(body.signedPayload)
     console.log('decode payload from apple', result)
     if (result) {
