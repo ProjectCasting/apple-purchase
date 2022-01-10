@@ -4,6 +4,7 @@ import { Subscription } from '../typeorm/entities/subscription.entity'
 import { Product } from '../typeorm/entities/product.entity'
 import { Transaction } from '../typeorm/entities/transaction.entity'
 import { SubscriptionPayload } from '../interface/subscription.create'
+import { ProductType } from '../constant/product.type';
 
 export class SubscriptionService {
   private subscriptionRepo: Repository<Subscription>
@@ -27,7 +28,7 @@ export class SubscriptionService {
 
     const transaction = await this.transactionRepo.findOne(data.transactionId);
     if (transaction) {
-      throw new Error('Invalid transaction');
+      throw new Error('Duplicate transaction');
     }
 
     const subscription = await this.subscriptionRepo.save({
@@ -60,7 +61,6 @@ export class SubscriptionService {
     const originalTransaction = await this.transactionRepo.findOne({
       originalTransactionId: data.originalTransactionId
     });
-    console.log(originalTransaction)
     if (!originalTransaction) {
       throw new Error('original transaction not exist');
     }
@@ -72,7 +72,7 @@ export class SubscriptionService {
 
     const transaction = await this.transactionRepo.findOne(data.transactionId);
     if (transaction) {
-      throw new Error('invalid transaction');
+      throw new Error('Duplicate transaction');
     }
 
     const subscription = await this.subscriptionRepo.findOne({
@@ -111,7 +111,7 @@ export class SubscriptionService {
 
     const transaction = await this.transactionRepo.findOne(data.transactionId);
     if (transaction) {
-      throw new Error('invalid transaction');
+      throw new Error('Duplicate transaction');
     }
 
     let subscription = await this.subscriptionRepo.findOne({
@@ -130,7 +130,7 @@ export class SubscriptionService {
         startDate: moment(data.purchaseDate).toDate(),
         expiresDate: data.expiresDate && moment(data.expiresDate).toDate(),
         isTrial: data.isTrialPeriod === 'true',
-        autoRenewStatus: data.autoRenewStatus,
+        autoRenewStatus: product.type === ProductType.AUTO_RENEWABLE,
         product
       })
     }
@@ -146,6 +146,37 @@ export class SubscriptionService {
       isTrial: data.isTrialPeriod === 'true',
       ownershipType: data.inAppOwnershipType
     })
+
+    return subscription
+  }
+
+  async updateRenewStatus(
+    data: SubscriptionPayload
+  ): Promise<Subscription> {
+    const originalTransaction = await this.transactionRepo.findOne({
+      originalTransactionId: data.originalTransactionId
+    });
+    if (!originalTransaction) {
+      throw new Error('original transaction not exist');
+    }
+
+    const product = await this.productRepo.findOne(data.productId);
+    if (!product) {
+      throw new Error('product not exist');
+    }
+
+    const transaction = await this.transactionRepo.findOne(data.transactionId);
+    if (!transaction) {
+      throw new Error('transaction not exist');
+    }
+
+    const subscription = await this.subscriptionRepo.findOne({
+      userId: originalTransaction.userId,
+      product
+    })
+
+    subscription.autoRenewStatus = data.autoRenewStatus
+    await this.subscriptionRepo.save(subscription)
 
     return subscription
   }

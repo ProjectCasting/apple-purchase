@@ -34,5 +34,6 @@ export enum Subtype {
 export enum Action {
   CREATE = 'CREATE',
   UPDATE = 'UPDATE',
+  CHANGE_RENEW = 'CHANGE_RENEW',
   IGNORE = 'IGNORE'
 }

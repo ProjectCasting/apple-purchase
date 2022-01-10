@@ -43,7 +43,7 @@ export class AppleWebhookService {
       const { x5c } = header
 
       const certs = x5c.map((item: string) => this.x5cToCert(item))
-      const appleCert = fs.readFileSync(path.resolve('./src/certs/certificate.pem'), 'utf8').toString()
+      const appleCert = fs.readFileSync(path.resolve(__dirname, '../../src/certs/certificate.pem'), 'utf8').toString()
 
       const trusted = await this.verifySigningChain(appleCert, certs)
       if (!trusted) {
@@ -78,7 +78,7 @@ export class AppleWebhookService {
   async handleRevoke(data: DecodePayloadData) {
     const payload = await this.formatCreationPayload(data.signedTransactionInfo)
     return {
-      action: Action.UPDATE,
+      action: Action.CHANGE_RENEW,
       payload: {
         ...payload,
         autoRenewStatus: false
@@ -89,16 +89,9 @@ export class AppleWebhookService {
   // subtype = INITIAL_BUY / RESUBSCRIBE
   async handleSubscribed(subtype: Subtype, data: DecodePayloadData) {
     const payload = await this.formatCreationPayload(data.signedTransactionInfo)
-    if (subtype === Subtype.INITIAL_BUY) {
-      return {
-        action: Action.CREATE,
-        payload
-      }
-    } else if (subtype === Subtype.RESUBSCRIBE) {
-      return {
-        action: Action.UPDATE,
-        payload
-      }
+    return {
+      action: Action.UPDATE,
+      payload
     }
   }
 
@@ -107,7 +100,7 @@ export class AppleWebhookService {
     const payload = await this.formatCreationPayload(data.signedTransactionInfo)
     if (subtype === Subtype.AUTO_RENEW_DISABLED) {
       return {
-        action: Action.UPDATE,
+        action: Action.CHANGE_RENEW,
         payload: {
           ...payload,
           autoRenewStatus: false
@@ -115,7 +108,7 @@ export class AppleWebhookService {
       }
     } else if (subtype === Subtype.AUTO_RENEW_ENABLED) {
       return {
-        action: Action.UPDATE,
+        action: Action.CHANGE_RENEW,
         payload: {
           ...payload,
           autoRenewStatus: true
@@ -129,15 +122,6 @@ export class AppleWebhookService {
     const payload = await this.formatCreationPayload(data.signedTransactionInfo)
     return {
       action: Action.UPDATE,
-      payload
-    }
-  }
-
-  // subtype = VOLUNTARY / BILLING_RETRY / PRICE_INCREASE
-  async handleExpired(subtype: Subtype, data: DecodePayloadData) {
-    const payload = await this.formatCreationPayload(data.signedTransactionInfo)
-    return {
-      action: Action.UPDATE,
       payload: {
         ...payload,
         autoRenewStatus: true
@@ -145,13 +129,25 @@ export class AppleWebhookService {
     }
   }
 
+  // subtype = VOLUNTARY / BILLING_RETRY / PRICE_INCREASE
+  async handleExpired(subtype: Subtype, data: DecodePayloadData) {
+    const payload = await this.formatCreationPayload(data.signedTransactionInfo)
+    return {
+      action: Action.CHANGE_RENEW,
+      payload: {
+        ...payload,
+        autoRenewStatus: false
+      }
+    }
+  }
+
   async handleGracePeriodExpired(subtype: Subtype, data: DecodePayloadData) {
     const payload = await this.formatCreationPayload(data.signedTransactionInfo)
     return {
-      action: Action.UPDATE,
+      action: Action.CHANGE_RENEW,
       payload: {
         ...payload,
-        autoRenewStatus: true
+        autoRenewStatus: false
       }
     }
   }
@@ -162,6 +158,7 @@ export class AppleWebhookService {
   }> {
     const payload: DecodePayload = await this.verfiyPayload(signedPayload)
     const { notificationType, subtype, data } = payload
+    console.log(`[Apple-Purchase] Handle webhook notificationType: ${notificationType}, subtype: ${subtype}`)
     switch (notificationType) {
       case NotificationType.REVOKE:
 
