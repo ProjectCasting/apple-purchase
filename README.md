@@ -3,7 +3,7 @@
 ## Installation
 ```bash
 $ cd my-project
-$ npm install git+ssh://git@github.com:codevon/apple-purchase.git --save
+$ npm install git+ssh://git@github.com:codevon/apple-purchase.git#v1.0.0 --save
 ```
 
 ## Migration
