@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppleWebhookService = void 0;
 const apple_webhook_1 = require("../constant/apple.webhook");
+const request_type_1 = require("../constant/request.type");
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const node_jose_1 = __importDefault(require("node-jose"));
@@ -62,6 +63,7 @@ class AppleWebhookService {
             purchaseDate: transactionInfo.purchaseDate,
             expiresDate: transactionInfo.expiresDate,
             inAppOwnershipType: transactionInfo.inAppOwnershipType,
+            requestType: request_type_1.RequestType.WEBHOOK,
             isTrialPeriod: 'false'
         };
     }

@@ -1,4 +1,5 @@
 import { NotificationType, Subtype, Action } from '../constant/apple.webhook'
+import { RequestType } from '../constant/request.type'
 import { SubscriptionPayload } from '../interface/subscription.create'
 import { TransactionDecodedPayload, DecodePayload, DecodePayloadData } from '../interface/apple.webhook'
 
@@ -71,6 +72,7 @@ export class AppleWebhookService {
       purchaseDate: transactionInfo.purchaseDate,
       expiresDate: transactionInfo.expiresDate,
       inAppOwnershipType: transactionInfo.inAppOwnershipType,
+      requestType: RequestType.WEBHOOK,
       isTrialPeriod: 'false'
     }
   }

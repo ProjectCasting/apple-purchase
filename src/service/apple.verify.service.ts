@@ -3,6 +3,7 @@ import { AppleEnv } from '../constant/apple.env'
 import { AppleCode } from '../constant/apple.code'
 import { InApp, VerifyPostData, VerifyResponse } from '../interface/apple.verify'
 import { AppleMessage } from '../constant/apple.message'
+import { RequestType } from '../constant/request.type'
 import { SubscriptionPayload } from '../interface/subscription.create'
 
 export class AppleVerifyService {
@@ -50,7 +51,8 @@ export class AppleVerifyService {
       purchaseDate: parseInt(inApp.purchase_date_ms),
       expiresDate: inApp.expires_date_ms && parseInt(inApp.expires_date_ms),
       inAppOwnershipType: inApp.in_app_ownership_type,
-      isTrialPeriod: inApp.is_trial_period
+      isTrialPeriod: inApp.is_trial_period,
+      requestType: RequestType.RECEIPT
     }
   }
 

@@ -33,6 +33,9 @@ export class Transaction {
   @Column({ name: 'ownership_type', nullable: true })
   ownershipType: string;
 
+  @Column({ name: 'request_type', nullable: true })
+  requestType: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

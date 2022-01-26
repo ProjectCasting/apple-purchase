@@ -5,6 +5,7 @@ export interface SubscriptionPayload {
     purchaseDate: number;
     expiresDate: number;
     inAppOwnershipType: string;
+    requestType: string;
     isTrialPeriod?: string;
     autoRenewStatus?: boolean;
 }

@@ -18,6 +18,7 @@ export declare class AppleWebhookService {
             purchaseDate: number;
             expiresDate: number;
             inAppOwnershipType: string;
+            requestType: string;
             isTrialPeriod?: string;
         };
     }>;
@@ -35,6 +36,7 @@ export declare class AppleWebhookService {
             purchaseDate: number;
             expiresDate: number;
             inAppOwnershipType: string;
+            requestType: string;
             isTrialPeriod?: string;
         };
     }>;
@@ -48,6 +50,7 @@ export declare class AppleWebhookService {
             purchaseDate: number;
             expiresDate: number;
             inAppOwnershipType: string;
+            requestType: string;
             isTrialPeriod?: string;
         };
     }>;
@@ -61,6 +64,7 @@ export declare class AppleWebhookService {
             purchaseDate: number;
             expiresDate: number;
             inAppOwnershipType: string;
+            requestType: string;
             isTrialPeriod?: string;
         };
     }>;
@@ -74,6 +78,7 @@ export declare class AppleWebhookService {
             purchaseDate: number;
             expiresDate: number;
             inAppOwnershipType: string;
+            requestType: string;
             isTrialPeriod?: string;
         };
     }>;

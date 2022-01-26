@@ -8,6 +8,7 @@ const axios_1 = __importDefault(require("axios"));
 const apple_env_1 = require("../constant/apple.env");
 const apple_code_1 = require("../constant/apple.code");
 const apple_message_1 = require("../constant/apple.message");
+const request_type_1 = require("../constant/request.type");
 class AppleVerifyService {
     constructor(env, shareSecret) {
         this.env = env;
@@ -48,7 +49,8 @@ class AppleVerifyService {
             purchaseDate: parseInt(inApp.purchase_date_ms),
             expiresDate: inApp.expires_date_ms && parseInt(inApp.expires_date_ms),
             inAppOwnershipType: inApp.in_app_ownership_type,
-            isTrialPeriod: inApp.is_trial_period
+            isTrialPeriod: inApp.is_trial_period,
+            requestType: request_type_1.RequestType.RECEIPT
         };
     }
     async validatePurchase(receipt) {

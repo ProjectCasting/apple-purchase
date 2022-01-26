@@ -2,7 +2,10 @@ import * as yargs from 'yargs'
 import fs from 'fs'
 import path from 'path'
 import clc from 'cli-color'
-import { getSequelizeTime } from './utils'
+import {
+  getDiffFiles,
+  getSequelizeTime
+} from './utils'
 
 /**
  * Copy migration file.
@@ -41,21 +44,15 @@ export class MigrationCommand implements yargs.CommandModule {
 
       const targetPath = path.resolve(process.cwd(), directory)
       const sourcePath = path.resolve(__dirname, `../../src/db/${type}/migration`)
-      const files = fs.readdirSync(sourcePath)
       console.log(`Copy migration file to ${targetPath}`)
-      const timestamp = new Date().getTime();
 
+      const files = getDiffFiles(targetPath, sourcePath)
+      const timestamp = new Date().getTime()
       for (let index = 0; index < files.length; index++) {
         const file = files[index]
         const time = file.slice(0, 13)
         const content = fs.readFileSync(`${sourcePath}/${file}`, 'utf-8')
-        let newTime: number|string
-        if (type === 'sequelize') {
-          newTime = getSequelizeTime(timestamp + index * 1000)
-        } else {
-          newTime = timestamp + index
-        }
-
+        const newTime = getSequelizeTime(type, timestamp, index)
         const newFile = file.replace(time, `${newTime}`)
         console.log(clc.blueBright(newFile))
         const newContent = content.replace(time, `${newTime}`)

@@ -8,6 +8,7 @@ export declare class Transaction {
     expiresDate: Date;
     isTrial: boolean;
     ownershipType: string;
+    requestType: string;
     createdAt: Date;
     updatedAt: Date;
     product: Product;

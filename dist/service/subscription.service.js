@@ -41,7 +41,8 @@ class SubscriptionService {
             purchaseDate: (0, moment_1.default)(data.purchaseDate).toDate(),
             expiresDate: data.expiresDate && (0, moment_1.default)(data.expiresDate).toDate(),
             isTrial: data.isTrialPeriod === 'true',
-            ownershipType: data.inAppOwnershipType
+            ownershipType: data.inAppOwnershipType,
+            requestType: data.requestType
         });
         return subscription;
     }
@@ -77,7 +78,8 @@ class SubscriptionService {
             purchaseDate: (0, moment_1.default)(data.purchaseDate).toDate(),
             expiresDate: data.expiresDate && (0, moment_1.default)(data.expiresDate).toDate(),
             isTrial: data.isTrialPeriod === 'true',
-            ownershipType: data.inAppOwnershipType
+            ownershipType: data.inAppOwnershipType,
+            requestType: data.requestType
         });
         return subscription;
     }
@@ -119,7 +121,8 @@ class SubscriptionService {
             purchaseDate: (0, moment_1.default)(data.purchaseDate).toDate(),
             expiresDate: data.expiresDate && (0, moment_1.default)(data.expiresDate).toDate(),
             isTrial: data.isTrialPeriod === 'true',
-            ownershipType: data.inAppOwnershipType
+            ownershipType: data.inAppOwnershipType,
+            requestType: data.requestType
         });
         return subscription;
     }

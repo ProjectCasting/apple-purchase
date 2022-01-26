@@ -49,7 +49,8 @@ export class SubscriptionService {
       purchaseDate: moment(data.purchaseDate).toDate(),
       expiresDate: data.expiresDate && moment(data.expiresDate).toDate(),
       isTrial: data.isTrialPeriod === 'true',
-      ownershipType: data.inAppOwnershipType
+      ownershipType: data.inAppOwnershipType,
+      requestType: data.requestType
     })
 
     return subscription
@@ -94,7 +95,8 @@ export class SubscriptionService {
       purchaseDate: moment(data.purchaseDate).toDate(),
       expiresDate: data.expiresDate && moment(data.expiresDate).toDate(),
       isTrial: data.isTrialPeriod === 'true',
-      ownershipType: data.inAppOwnershipType
+      ownershipType: data.inAppOwnershipType,
+      requestType: data.requestType
     })
 
     return subscription
@@ -144,7 +146,8 @@ export class SubscriptionService {
       purchaseDate: moment(data.purchaseDate).toDate(),
       expiresDate: data.expiresDate && moment(data.expiresDate).toDate(),
       isTrial: data.isTrialPeriod === 'true',
-      ownershipType: data.inAppOwnershipType
+      ownershipType: data.inAppOwnershipType,
+      requestType: data.requestType
     })
 
     return subscription
