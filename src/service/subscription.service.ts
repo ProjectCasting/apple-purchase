@@ -116,6 +116,15 @@ export class SubscriptionService {
       throw new Error('Duplicate transaction');
     }
 
+    const originalTransaction = await this.transactionRepo.findOne({
+      originalTransactionId: data.originalTransactionId
+    });
+
+    if (originalTransaction && `${originalTransaction.userId}` !== `${userId}`) {
+      console.log(`[Apple-Purchase] Invalid user id ${userId} for original transaction ${data.originalTransactionId}`)
+      throw new Error('Invalid transaction');
+    }
+
     let subscription = await this.subscriptionRepo.findOne({
       userId,
       product
