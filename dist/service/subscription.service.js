@@ -97,7 +97,7 @@ class SubscriptionService {
         });
         if (originalTransaction && `${originalTransaction.userId}` !== `${userId}`) {
             console.log(`[Apple-Purchase] Invalid user id ${userId} for original transaction ${data.originalTransactionId}`);
-            throw new Error('Invalid transaction');
+            throw new Error('Invalid Restore Action');
         }
         let subscription = await this.subscriptionRepo.findOne({
             userId,
