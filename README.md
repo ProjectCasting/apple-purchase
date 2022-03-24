@@ -1,5 +1,14 @@
 # Apple Purchase
 
+## Development
+```
+$ tsc
+$ git add .
+$ git commit -m "<commit message>"
+$ git tag <your tag>
+$ git push origin <your tag>
+```
+
 ## Installation
 ```bash
 $ cd my-project
