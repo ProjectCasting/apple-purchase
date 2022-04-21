@@ -35,5 +35,6 @@ export enum Action {
   CREATE = 'CREATE',
   UPDATE = 'UPDATE',
   CHANGE_RENEW = 'CHANGE_RENEW',
+  REFUND = 'REFUND',
   IGNORE = 'IGNORE'
 }

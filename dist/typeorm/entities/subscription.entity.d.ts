@@ -9,4 +9,6 @@ export declare class Subscription {
     createdAt: Date;
     updatedAt: Date;
     product: Product;
+    revocationDate: Date;
+    revocationReason: string;
 }

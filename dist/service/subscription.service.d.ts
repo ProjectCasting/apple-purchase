@@ -8,6 +8,7 @@ export declare class SubscriptionService {
     constructor(connection: Connection);
     create(data: SubscriptionPayload, userId?: string): Promise<Subscription>;
     update(data: SubscriptionPayload): Promise<Subscription>;
+    refund(data: SubscriptionPayload): Promise<Subscription>;
     createOrUpdate(data: SubscriptionPayload, userId?: string): Promise<Subscription>;
     updateRenewStatus(data: SubscriptionPayload): Promise<Subscription>;
 }

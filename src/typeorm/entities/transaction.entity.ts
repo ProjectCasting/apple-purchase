@@ -49,4 +49,10 @@ export class Transaction {
   @ManyToOne(() => Subscription)
   @JoinColumn({ name: 'subscription_id', referencedColumnName: 'id' })
   subscription: Subscription;
+
+  @Column({ name: 'revocation_date', nullable: true })
+  revocationDate: Date;
+
+  @Column({ name: 'revocation_reason', nullable: true })
+  revocationReason: string;
 }

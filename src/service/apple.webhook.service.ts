@@ -71,6 +71,8 @@ export class AppleWebhookService {
       originalTransactionId: transactionInfo.originalTransactionId,
       purchaseDate: transactionInfo.purchaseDate,
       expiresDate: transactionInfo.expiresDate,
+      revocationDate: transactionInfo.revocationDate,
+      revocationReason: transactionInfo.revocationReason,
       inAppOwnershipType: transactionInfo.inAppOwnershipType,
       requestType: RequestType.WEBHOOK,
       isTrialPeriod: 'false'
@@ -154,6 +156,17 @@ export class AppleWebhookService {
     }
   }
 
+  async handleRefund(subtype: Subtype, data: DecodePayloadData) {
+    const payload = await this.formatCreationPayload(data.signedTransactionInfo)
+    return {
+      action: Action.REFUND,
+      payload: {
+        ...payload,
+        autoRenewStatus: false
+      }
+    }
+  }
+
   async handle(signedPayload: string): Promise<{
     action: Action;
     payload: SubscriptionPayload;
@@ -180,6 +193,9 @@ export class AppleWebhookService {
       case NotificationType.GRACE_PERIOD_EXPIRED:
 
         return this.handleGracePeriodExpired(subtype, data)
+      case NotificationType.REFUND:
+        // App Store successfully refunded a transaction
+        return this.handleRefund(subtype, data)
       case NotificationType.OFFER_REDEEMED:
         // User has redeemed a promotional offer or discount code
         // subtype = INITIAL_BUY
@@ -205,9 +221,6 @@ export class AppleWebhookService {
         break
       case NotificationType.CONSUMPTION_REQUEST:
         // Customer initiated a refund request for a consumable in-app purchase
-        break
-      case NotificationType.REFUND:
-        // App Store successfully refunded a transaction
         break
       case NotificationType.REFUND_DECLINED:
         // App Store declined a refund request initiated by the app developer

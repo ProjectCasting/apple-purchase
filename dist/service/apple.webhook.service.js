@@ -62,6 +62,8 @@ class AppleWebhookService {
             originalTransactionId: transactionInfo.originalTransactionId,
             purchaseDate: transactionInfo.purchaseDate,
             expiresDate: transactionInfo.expiresDate,
+            revocationDate: transactionInfo.revocationDate,
+            revocationReason: transactionInfo.revocationReason,
             inAppOwnershipType: transactionInfo.inAppOwnershipType,
             requestType: request_type_1.RequestType.WEBHOOK,
             isTrialPeriod: 'false'
@@ -117,6 +119,13 @@ class AppleWebhookService {
             payload: Object.assign(Object.assign({}, payload), { autoRenewStatus: false })
         };
     }
+    async handleRefund(subtype, data) {
+        const payload = await this.formatCreationPayload(data.signedTransactionInfo);
+        return {
+            action: apple_webhook_1.Action.REFUND,
+            payload: Object.assign(Object.assign({}, payload), { autoRenewStatus: false })
+        };
+    }
     async handle(signedPayload) {
         const payload = await this.verfiyPayload(signedPayload);
         const { notificationType, subtype, data } = payload;
@@ -134,6 +143,8 @@ class AppleWebhookService {
                 return this.handleExpired(subtype, data);
             case apple_webhook_1.NotificationType.GRACE_PERIOD_EXPIRED:
                 return this.handleGracePeriodExpired(subtype, data);
+            case apple_webhook_1.NotificationType.REFUND:
+                return this.handleRefund(subtype, data);
             case apple_webhook_1.NotificationType.OFFER_REDEEMED:
                 break;
             case apple_webhook_1.NotificationType.DID_CHANGE_RENEWAL_PREF:
@@ -143,8 +154,6 @@ class AppleWebhookService {
             case apple_webhook_1.NotificationType.PRICE_INCREASE:
                 break;
             case apple_webhook_1.NotificationType.CONSUMPTION_REQUEST:
-                break;
-            case apple_webhook_1.NotificationType.REFUND:
                 break;
             case apple_webhook_1.NotificationType.REFUND_DECLINED:
                 break;
