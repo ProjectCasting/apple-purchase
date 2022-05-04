@@ -40,4 +40,10 @@ export class Subscription {
   @ManyToOne(() => Product)
   @JoinColumn({ name: 'product_id', referencedColumnName: 'id' })
   product: Product;
+
+  @Column({ name: 'revocation_date', nullable: true })
+  revocationDate: Date;
+
+  @Column({ name: 'revocation_reason', nullable: true })
+  revocationReason: string;
 }

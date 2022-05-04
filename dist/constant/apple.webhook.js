@@ -39,6 +39,7 @@ var Action;
     Action["CREATE"] = "CREATE";
     Action["UPDATE"] = "UPDATE";
     Action["CHANGE_RENEW"] = "CHANGE_RENEW";
+    Action["REFUND"] = "REFUND";
     Action["IGNORE"] = "IGNORE";
 })(Action = exports.Action || (exports.Action = {}));
 //# sourceMappingURL=apple.webhook.js.map

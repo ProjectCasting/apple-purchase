@@ -83,6 +83,36 @@ class SubscriptionService {
         });
         return subscription;
     }
+    async refund(data) {
+        const originalTransaction = await this.transactionRepo.findOne({
+            originalTransactionId: data.originalTransactionId
+        });
+        if (!originalTransaction) {
+            throw new Error('original transaction not exist');
+        }
+        const product = await this.productRepo.findOne(data.productId);
+        if (!product) {
+            throw new Error('Product not exist');
+        }
+        const transaction = await this.transactionRepo.findOne(data.transactionId);
+        if (!transaction) {
+            throw new Error('Refund transaction not exist');
+        }
+        const subscription = await this.subscriptionRepo.findOne({
+            userId: originalTransaction.userId,
+            product
+        });
+        subscription.expiresDate = data.expiresDate && (0, moment_1.default)(data.expiresDate).toDate();
+        subscription.isTrial = data.isTrialPeriod === 'true';
+        subscription.autoRenewStatus = data.autoRenewStatus;
+        if (data.revocationDate) {
+            transaction.revocationDate = subscription.revocationDate = (0, moment_1.default)(data.revocationDate).toDate();
+            transaction.revocationReason = subscription.revocationReason = data.revocationReason;
+        }
+        await this.subscriptionRepo.save(subscription);
+        await this.transactionRepo.save(transaction);
+        return subscription;
+    }
     async createOrUpdate(data, userId) {
         const product = await this.productRepo.findOne(data.productId);
         if (!product) {

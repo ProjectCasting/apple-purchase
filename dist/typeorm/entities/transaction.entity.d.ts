@@ -13,4 +13,6 @@ export declare class Transaction {
     updatedAt: Date;
     product: Product;
     subscription: Subscription;
+    revocationDate: Date;
+    revocationReason: string;
 }

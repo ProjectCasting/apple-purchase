@@ -52,6 +52,14 @@ __decorate([
     (0, typeorm_1.JoinColumn)({ name: 'product_id', referencedColumnName: 'id' }),
     __metadata("design:type", product_entity_1.Product)
 ], Subscription.prototype, "product", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'revocation_date', nullable: true }),
+    __metadata("design:type", Date)
+], Subscription.prototype, "revocationDate", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'revocation_reason', nullable: true }),
+    __metadata("design:type", String)
+], Subscription.prototype, "revocationReason", void 0);
 Subscription = __decorate([
     (0, typeorm_1.Entity)({ name: 'subscriptions' })
 ], Subscription);

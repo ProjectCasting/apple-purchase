@@ -1,4 +1,4 @@
-export interface SubscriptionPayload{
+export interface SubscriptionPayload {
   productId: string
   transactionId: string
   originalTransactionId: string
@@ -6,6 +6,8 @@ export interface SubscriptionPayload{
   expiresDate: number
   inAppOwnershipType: string
   requestType: string
+  revocationDate?: number
+  revocationReason?: string
   isTrialPeriod?: string
   autoRenewStatus?: boolean
 }

@@ -19,6 +19,8 @@ export declare class AppleWebhookService {
             expiresDate: number;
             inAppOwnershipType: string;
             requestType: string;
+            revocationDate?: number;
+            revocationReason?: string;
             isTrialPeriod?: string;
         };
     }>;
@@ -37,6 +39,8 @@ export declare class AppleWebhookService {
             expiresDate: number;
             inAppOwnershipType: string;
             requestType: string;
+            revocationDate?: number;
+            revocationReason?: string;
             isTrialPeriod?: string;
         };
     }>;
@@ -51,6 +55,8 @@ export declare class AppleWebhookService {
             expiresDate: number;
             inAppOwnershipType: string;
             requestType: string;
+            revocationDate?: number;
+            revocationReason?: string;
             isTrialPeriod?: string;
         };
     }>;
@@ -65,6 +71,8 @@ export declare class AppleWebhookService {
             expiresDate: number;
             inAppOwnershipType: string;
             requestType: string;
+            revocationDate?: number;
+            revocationReason?: string;
             isTrialPeriod?: string;
         };
     }>;
@@ -79,6 +87,24 @@ export declare class AppleWebhookService {
             expiresDate: number;
             inAppOwnershipType: string;
             requestType: string;
+            revocationDate?: number;
+            revocationReason?: string;
+            isTrialPeriod?: string;
+        };
+    }>;
+    handleRefund(subtype: Subtype, data: DecodePayloadData): Promise<{
+        action: Action;
+        payload: {
+            autoRenewStatus: boolean;
+            productId: string;
+            transactionId: string;
+            originalTransactionId: string;
+            purchaseDate: number;
+            expiresDate: number;
+            inAppOwnershipType: string;
+            requestType: string;
+            revocationDate?: number;
+            revocationReason?: string;
             isTrialPeriod?: string;
         };
     }>;

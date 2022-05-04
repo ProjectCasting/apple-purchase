@@ -44,6 +44,12 @@ class ApplePurchase {
             const subscriptionService = new service_1.SubscriptionService(connection);
             await signedPayloadService.create(signedPayload);
             const result = await appleWebhookService.handle(signedPayload);
+            if (!result) {
+                return {
+                    status: 500,
+                    message: 'Unhandled action'
+                };
+            }
             const { action, payload } = result;
             console.log('[Apple-Purchase] Handle webhook payload', payload);
             let subscription;
@@ -52,6 +58,9 @@ class ApplePurchase {
             }
             else if (action === apple_webhook_1.Action.UPDATE) {
                 subscription = await subscriptionService.update(payload);
+            }
+            else if (action === apple_webhook_1.Action.REFUND) {
+                subscription = await subscriptionService.refund(payload);
             }
             return {
                 status: 200,

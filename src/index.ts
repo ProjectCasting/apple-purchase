@@ -17,9 +17,9 @@ export interface purchaseOptions {
 }
 
 export class ApplePurchase {
-  constructor (
+  constructor(
     private options: purchaseOptions
-  ) {}
+  ) { }
 
   async handleReceipt(userId: string, receipt: string): Promise<{
     status: number;
@@ -63,7 +63,7 @@ export class ApplePurchase {
     status: number,
     message?: string,
     data?: Subscription
-  }>{
+  }> {
     try {
       const { connectionOptions } = this.options
       const connection = await getConnection(connectionOptions)
@@ -73,6 +73,12 @@ export class ApplePurchase {
 
       await signedPayloadService.create(signedPayload)
       const result = await appleWebhookService.handle(signedPayload)
+      if (!result) {
+        return {
+          status: 500,
+          message: 'Unhandled action'
+        }
+      }
       const { action, payload } = result
       console.log('[Apple-Purchase] Handle webhook payload', payload)
 
@@ -82,6 +88,8 @@ export class ApplePurchase {
         subscription = await subscriptionService.updateRenewStatus(payload)
       } else if (action === Action.UPDATE) {
         subscription = await subscriptionService.update(payload)
+      } else if (action === Action.REFUND) {
+        subscription = await subscriptionService.refund(payload)
       }
 
       return {
